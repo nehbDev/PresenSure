@@ -1,13 +1,29 @@
+// src/pages/LandingPage.jsx
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your login logic here (e.g., API call)
-    console.log("Email:", email, "Password:", password);
+    setError("");
+
+    // Simulate authentication logic
+    if (email === "admin@example.com" && password === "password123") {
+      console.log("Login successful! Role: Admin");
+      localStorage.setItem("userRole", "admin"); // Store role
+      navigate("/students");
+    } else if (email === "instructor@example.com" && password === "password321") {
+      console.log("Login successful! Role: Instructor");
+      localStorage.setItem("userRole", "instructor"); // Store role
+      navigate("/students");
+    } else {
+      setError("Invalid email or password. Please try again.");
+    }
   };
 
   return (
@@ -51,6 +67,9 @@ function LandingPage() {
               required
             />
           </div>
+          {error && (
+            <p className="text-red-500 text-sm text-center mb-4">{error}</p>
+          )}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition duration-200"
