@@ -1,11 +1,13 @@
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaUserCircle } from "react-icons/fa";
 import { useEffect, useState, useRef } from "react";
 
 const EditStudentModal = ({ isOpen, onClose, student, onSave }) => {
   const [animate, setAnimate] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState(student || {});
-  const [previewImage, setPreviewImage] = useState(student?.student_photo || "");
+  const [previewImage, setPreviewImage] = useState(
+    student?.student_photo || ""
+  );
   const fileInputRef = useRef(null);
 
   // Handle opening and closing with animation
@@ -60,34 +62,36 @@ const EditStudentModal = ({ isOpen, onClose, student, onSave }) => {
 
   return (
     <div
-      className={`fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300 backdrop-blur-xs ${
+      className={`fixed inset-0 bg-opacity-30 flex items-center justify-center z-50 transition-opacity duration-300 backdrop-blur-xs ${
         animate ? "opacity-100" : "opacity-0"
       }`}
     >
       <div
-        className={`bg-white rounded-lg shadow-md w-full max-w-[80%] h-[550px] transform transition-all duration-300 ${
+        className={`bg-[#F2F9FF] rounded-lg shadow-sm w-full max-w-xl transform transition-all duration-300 ${
           animate ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
         }`}
       >
         {/* Header */}
-        <div className="bg-[#2D336B] flex justify-between items-center px-6 py-3 rounded-t-lg">
-          <h2 className="text-xl font-bold text-white">Edit Student</h2>
-          <button onClick={onClose} className="text-white">
-            <FaTimes className="h-4 w-4" />
+        <div className="bg-[#A9B5DF] flex justify-between items-center px-5 py-3 border-b rounded-t-lg border-gray-200">
+          <h2 className="text-base font-bold text-[#2D336B]">Edit Student</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <FaTimes className="h-3 w-3" />
           </button>
         </div>
 
         {/* Scrollable Form Content */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6 h-[calc(100%-7rem)] overflow-y-auto">
-          <div className="flex flex-col gap-6">
+        <form
+          onSubmit={handleSubmit}
+          className="p-5 space-y-4 max-h-[70vh] overflow-y-auto hide-scrollbar"
+        >
+          <div className="flex flex-col gap-4">
             {/* Photo and Primary Inputs */}
-            <div className="flex flex-col sm:flex-row gap-6 items-start">
+            <div className="flex flex-col sm:flex-row gap-4 items-start">
               <div className="flex flex-col items-center">
-                <img
-                  src={previewImage || "https://via.placeholder.com/100"}
-                  alt="Student"
-                  className="w-25 h-25 object-cover rounded-lg shadow-sm my-6 mx-3"
-                />
+                <FaUserCircle className="w-20 h-20 text-gray-400 rounded-full border border-gray-400" />
                 <input
                   type="file"
                   accept="image/*"
@@ -98,59 +102,55 @@ const EditStudentModal = ({ isOpen, onClose, student, onSave }) => {
                 <button
                   type="button"
                   onClick={handleButtonClick}
-                  className="bg-[#2D336B] text-white px-3 py-1.5 text-xs rounded-md hover:bg-[#3e5a77] transition-colors w-25 h-9"
+                  className="mt-2 bg-gray-200 text-gray-700 px-2 py-1 text-xs font-semibold rounded-md border border-gray-400 hover:bg-gray-300 transition-colors"
                 >
                   Change Photo
                 </button>
               </div>
-              <div className="flex-1 space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="transition-all duration-300 ease-out transform hover:bg-gray-50 p-2 rounded-md delay-0">
-                    <label className="text-sm font-medium text-gray-700">First Name:</label>
-                    <input
-                      type="text"
-                      name="firstname"
-                      value={formData.firstname || ""}
-                      onChange={handleChange}
-                      className="border-2 border-[#2D336B] rounded-md px-2 py-1 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] text-sm"
-                    />
-                  </div>
-                  <div className="transition-all duration-300 ease-out transform hover:bg-gray-50 p-2 rounded-md delay-100">
-                    <label className="text-sm font-medium text-gray-700">Middle Initial:</label>
-                    <input
-                      type="text"
-                      name="middle_initial"
-                      value={formData.middle_initial || ""}
-                      onChange={handleChange}
-                      className="border-2 border-[#2D336B] rounded-md px-2 py-1 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] text-sm"
-                    />
-                  </div>
-                  <div className="transition-all duration-300 ease-out transform hover:bg-gray-50 p-2 rounded-md delay-200">
-                    <label className="text-sm font-medium text-gray-700">Last Name:</label>
-                    <input
-                      type="text"
-                      name="lastname"
-                      value={formData.lastname || ""}
-                      onChange={handleChange}
-                      className="border-2 border-[#2D336B] rounded-md px-2 py-1 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] text-sm"
-                    />
-                  </div>
-                  <div className="transition-all duration-300 ease-out transform hover:bg-gray-50 p-2 rounded-md delay-300">
-                    <label className="text-sm font-medium text-gray-700">Student ID:</label>
-                    <input
-                      type="text"
-                      name="studentId"
-                      value={formData.studentId || ""}
-                      onChange={handleChange}
-                      className="border-2 border-[#2D336B] rounded-md px-2 py-1 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] text-sm"
-                    />
-                  </div>
+              <div className="flex-1 space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {[
+                    {
+                      label: "Student ID",
+                      name: "studentId",
+                      placeholder: "e.g., C-2000-001",
+                    },
+                    {
+                      label: "First Name",
+                      name: "firstname",
+                      placeholder: "e.g., Juan",
+                    },
+                    {
+                      label: "Middle Initial",
+                      name: "middle_initial",
+                      placeholder: "e.g., D.",
+                    },
+                    {
+                      label: "Last Name",
+                      name: "lastname",
+                      placeholder: "e.g., Dela Cruz",
+                    },
+                  ].map((field) => (
+                    <div key={field.name}>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                        {field.label}
+                      </label>
+                      <input
+                        type="text"
+                        name={field.name}
+                        value={formData[field.name] || ""}
+                        onChange={handleChange}
+                        className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+                        placeholder={field.placeholder}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
             {/* Secondary and Tertiary Inputs */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
                 {
                   label: "Course",
@@ -164,12 +164,14 @@ const EditStudentModal = ({ isOpen, onClose, student, onSave }) => {
                   name: "year_and_section",
                   type: "text",
                   hierarchy: "secondary",
+                  placeholder: "e.g., 3-A",
                 },
                 {
                   label: "Department",
                   name: "department",
                   type: "text",
                   hierarchy: "secondary",
+                  placeholder: "e.g., CCS",
                 },
                 {
                   label: "Sex",
@@ -183,12 +185,14 @@ const EditStudentModal = ({ isOpen, onClose, student, onSave }) => {
                   name: "email",
                   type: "email",
                   hierarchy: "tertiary",
+                  placeholder: "e.g., juan@example.com",
                 },
                 {
                   label: "Password",
                   name: "password",
                   type: "password",
                   hierarchy: "tertiary",
+                  placeholder: "Enter password",
                 },
                 {
                   label: "Role",
@@ -204,23 +208,18 @@ const EditStudentModal = ({ isOpen, onClose, student, onSave }) => {
                   options: ["regular", "irregular"],
                   hierarchy: "tertiary",
                 },
-              ].map((field, index) => (
-                <div
-                  key={field.name}
-                  className={`transition-all duration-300 ease-out transform hover:bg-gray-50 p-2 rounded-md ${
-                    animate ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"
-                  } delay-${(index + 4) * 100}`}
-                >
-                  <label className="text-sm font-medium text-gray-700">{field.label}:</label>
+              ].map((field) => (
+                <div key={field.name}>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    {field.label}
+                  </label>
                   {field.type === "select" ? (
                     <select
                       name={field.name}
                       value={formData[field.name] || ""}
                       onChange={handleChange}
                       disabled={field.disabled}
-                      className={`border-2 border-[#2D336B] rounded-md px-2 py-1 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] ${
-                        field.hierarchy === "secondary" ? "text-sm" : "text-xs"
-                      }`}
+                      className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
                     >
                       <option value="">Select {field.label}</option>
                       {field.options.map((option) => (
@@ -236,9 +235,8 @@ const EditStudentModal = ({ isOpen, onClose, student, onSave }) => {
                       value={formData[field.name] || ""}
                       onChange={handleChange}
                       disabled={field.disabled}
-                      className={`border-2 border-[#2D336B] rounded-md px-2 py-1 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] ${
-                        field.hierarchy === "secondary" ? "text-sm" : "text-xs"
-                      }`}
+                      placeholder={field.placeholder}
+                      className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
                     />
                   )}
                 </div>
@@ -248,20 +246,20 @@ const EditStudentModal = ({ isOpen, onClose, student, onSave }) => {
         </form>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 p-4 border-t border-gray-200">
-          <button
-            type="submit"
-            onClick={handleSubmit}
-            className="flex items-center bg-[#2D336B] border border-[#2D336B] px-3 py-1.5 text-sm text-white rounded-md hover:border-[#ffffff] transition-all duration-300 hover:scale-95"
-          >
-            Save
-          </button>
+        <div className="flex justify-end gap-2 p-5 border-t border-gray-200">
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center bg-[#34495E] text-white px-3 py-1.5 text-sm rounded-md hover:bg-[#3e5a77] transition-colors"
+            className="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
           >
             Cancel
+          </button>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="px-3 py-1.5 text-xs font-semibold text-green-700 bg-green-200 rounded-md hover:bg-green-700 hover:text-green-100 transition-colors"
+          >
+            Save Changes
           </button>
         </div>
       </div>

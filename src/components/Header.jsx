@@ -49,7 +49,11 @@ function Header({ isCollapsed, setIsCollapsed }) {
   }, []);
 
   return (
-    <header className="h-14 bg-[#2D336B] text-white p-4 flex items-center justify-between">
+    <header className="h-14 bg-[#2D336B] text-white p-4 flex items-center justify-between sticky top-0 z-10"
+    style={{
+      marginLeft: isCollapsed ? '4rem' : '12rem', // Match sidebar widths
+      transition: 'margin-left 300ms ease-in-out',
+    }}>
       <div className="flex items-center">
         <button
           onClick={toggleSidebar}
