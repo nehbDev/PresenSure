@@ -1,6 +1,6 @@
 // App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/landingPage";
+import LoginPage from "./pages/LoginPage";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import StudentsPage from "./pages/Admin/StudentsPage";
 import InstructorPage from "./pages/Admin/InstructorPage";
@@ -14,7 +14,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route element={<Layout />}>
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/schedule" element={<SchedulePage />} />

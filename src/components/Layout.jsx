@@ -30,14 +30,21 @@ function Layout() {
       ) : (
         <AdminSidebar isCollapsed={isSidebarCollapsed} />
       )}
-      <div
-        className={`flex-1 transition-all duration-300 ${
-          isSidebarCollapsed ? "ml-16" : "ml-48"
-        }`}
-      >
+      
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col min-w-0"> {/* Added min-w-0 to prevent overflow */}
         <Header isCollapsed={isSidebarCollapsed} setIsCollapsed={setIsSidebarCollapsed} />
-        <main className="p-4">
-          <Outlet />
+        
+        {/* Content container with proper spacing */}
+        <main 
+          className={`flex-1 p-4 transition-all duration-300 ${
+            isSidebarCollapsed ? "ml-16" : "ml-48"
+          }`}
+        >
+          {/* Add overflow control */}
+          <div className="max-w-full overflow-x-auto">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

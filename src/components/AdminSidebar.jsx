@@ -29,6 +29,13 @@ function AdminSidebar({ isCollapsed }) {
       className={`bg-[#ffffff] h-screen fixed flex flex-col justify-between shadow-md transition-all duration-300 ease-in-out z-10 ${
         isCollapsed ? "w-16" : "w-48"
       }`}
+      style={{
+        // Ensure sidebar stays on top of other content
+        position: 'fixed',
+        height: '100vh',
+        left: 0,
+        top: 0,
+      }}
     >
       <div className="h-14 bg-[#2D336B] flex items-center p-3">
         <div className="flex items-center">

@@ -1,7 +1,7 @@
 import { FaTimes } from "react-icons/fa";
 import { useEffect, useState, useRef } from "react";
 
-const BulkRegistrationModal = ({ isOpen, onClose, onSave }) => {
+const BulkScheduleModal = ({ isOpen, onClose, onSave }) => {
   const [animate, setAnimate] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [file, setFile] = useState(null);
@@ -63,7 +63,7 @@ const BulkRegistrationModal = ({ isOpen, onClose, onSave }) => {
       >
         {/* Header */}
         <div className="bg-[#A9B5DF] flex justify-between items-center px-4 py-2 rounded-t-lg">
-          <h2 className="text-lg font-bold text-[#2D336B]">Bulk Registration</h2>
+          <h2 className="text-lg font-bold text-[#2D336B]">Bulk Schedule</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
@@ -77,7 +77,7 @@ const BulkRegistrationModal = ({ isOpen, onClose, onSave }) => {
           <div className="flex flex-col gap-4">
             <div className="transition-all duration-300 ease-out transform hover:bg-gray-50 p-1 rounded-md">
               <label className="text-xs font-medium text-gray-700">
-                Upload Student Data (CSV/Excel):
+                Upload Schedule Data (CSV/Excel):
               </label>
               <div className="mt-1">
                 <input
@@ -101,9 +101,8 @@ const BulkRegistrationModal = ({ isOpen, onClose, onSave }) => {
                 )}
               </div>
               <p className="text-[10px] text-gray-500 mt-1">
-                Please upload a file with columns: Student ID, First Name,
-                Middle Initial, Last Name, Course, Department, Year & Section,
-                Sex, Email, Password, Status.
+                Please upload a file with columns: Schedule ID, Subject Code,
+                Description, Days, Time, Room, Instructor, Total Students.
               </p>
             </div>
           </div>
@@ -121,7 +120,7 @@ const BulkRegistrationModal = ({ isOpen, onClose, onSave }) => {
           <button
             type="submit"
             onClick={handleSubmit}
-            className="flex items-center bg-blue-200 px-2 py-1 text-xs text-blue-700 font-bold rounded-md  hover:bg-blue-700 transition-colors hover:text-blue-100"
+            className="flex items-center bg-blue-200 px-2 py-1 text-xs text-blue-700 font-bold rounded-md hover:bg-blue-700 transition-colors hover:text-blue-100"
           >
             Upload
           </button>
@@ -131,4 +130,4 @@ const BulkRegistrationModal = ({ isOpen, onClose, onSave }) => {
   );
 };
 
-export default BulkRegistrationModal;
+export default BulkScheduleModal;
