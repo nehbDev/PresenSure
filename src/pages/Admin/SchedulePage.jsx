@@ -1,6 +1,13 @@
 import { useState } from "react";
 import DataTable from "react-data-table-component";
-import { FaSearch, FaCalendarPlus, FaPlusCircle } from "react-icons/fa";
+import {
+  FaSearch,
+  FaUsers,
+  FaUserPlus,
+  FaAngleRight,
+  FaPlusCircle,
+  FaCalendarPlus
+} from "react-icons/fa";
 import ViewScheduleModal from "../../components/modal/ViewScheduleModal";
 import BulkScheduleModal from "../../components/modal/BulkScheduleModal";
 import ManualScheduleModal from "../../components/modal/ManualScheduleModal";
@@ -27,7 +34,7 @@ function SchedulesPage() {
       description: "Data Structures",
       days: "TTh",
       time: "10:00 AM - 11:30 AM",
-      room: "LAB-102",
+      room: "LAB-101",
       instructor: "Dr. John Reyes",
       totalStudents: 25,
     },
@@ -115,13 +122,13 @@ function SchedulesPage() {
       cell: (row) => (
         <div className="flex items-center justify-center space-x-1 w-full">
           <button
-            className="flex items-center justify-center min-w-[3rem] bg-[#F59E0B] text-white px-2 py-1 text-xs rounded hover:bg-[#3e5a77] transition-colors"
+            className="flex items-center justify-center bg-[#2D336B] text-white p-1 text-xs rounded-full hover:bg-[#A9B5DF] transition-colors"
             onClick={() => {
               setSelectedSchedule(row);
               setIsViewModalOpen(true);
             }}
           >
-            View
+            <FaAngleRight className="w-4 h-4" />
           </button>
         </div>
       ),
@@ -130,7 +137,7 @@ function SchedulesPage() {
       button: true,
       width: "100px",
       center: true,
-      right: true, // Ensure column is aligned to the rightmost edge
+      right: true,
     },
   ];
 
@@ -151,16 +158,17 @@ function SchedulesPage() {
   const customStyles = {
     table: {
       style: {
-        borderCollapse: "separate",
-        borderSpacing: "0 0.5rem",
-        width: "100%", // Ensure table stretches to container width
+        width: "100%",
+        backgroundColor: "#f1f5f9",
+        border: "1px solid #e5e7eb",
+        borderRadius: "0.25rem",
       },
     },
     headRow: {
       style: {
         backgroundColor: "#A9B5DF",
-        border: "1px solid #e5e7eb",
-        marginBottom: "0.5rem",
+        borderRadius: "0.25rem 0.25rem 0 0",
+        borderBottom: "1px solid #e5e7eb",
       },
     },
     headCells: {
@@ -171,6 +179,7 @@ function SchedulesPage() {
         color: "#2D336B",
         fontSize: "0.75rem",
         display: "flex",
+        justifyContent: "center",
       },
     },
     cells: {
@@ -179,42 +188,46 @@ function SchedulesPage() {
         textAlign: "center",
         fontSize: "0.75rem",
         display: "flex",
-        marginRight: "0.5rem", // Add space between columns
+        justifyContent: "center",
       },
     },
     rows: {
       style: {
         backgroundColor: "#f1f5f9",
-        border: "1px solid #e5e7eb",
-        borderRadius: "0.25rem",
-        marginBottom: "0.5rem",
-        minHeight: "2rem",
+        borderBottom: "1px solid #e5e7eb",
         "&:hover": {
           backgroundColor: "#e2e8f0",
         },
         "&:last-child": {
-          marginBottom: "0",
+          borderBottom: "none",
+          borderRadius: "0 0 0.25rem 0.25rem",
+        },
+        "&:first-child": {
+          borderRadius: "0",
+        },
+        "&:not(:first-child):not(:last-child)": {
+          borderRadius: "0",
         },
       },
     },
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 w-full max-w-[1800px] mx-auto">
       <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
         <div className="flex items-center">
           <h1 className="text-xl text-[#2D336B] font-bold">Schedules</h1>
         </div>
         <div className="flex items-center space-x-3 text-[#ffffff]">
           <button
-            className="flex items-center bg-[#2563EB] border border-[#2D336B] px-3 py-1.5 text-sm rounded-md hover:border-[#ffffff] transition-all duration-300 hover:scale-95"
+            className="flex items-center bg-white border-2 border-blue-700 px-3 py-1.5 text-blue-700 text-sm rounded-md hover:bg-blue-700 transition-colors hover:text-white"
             onClick={() => setIsBulkModalOpen(true)}
           >
             <FaCalendarPlus className="mr-1 h-4 w-4" />
             Bulk Schedule
           </button>
           <button
-            className="flex items-center bg-[#059669] border border-[#2D336B] px-3 py-1.5 text-sm rounded-md hover:border-[#ffffff] transition-all duration-300 hover:scale-95"
+            className="flex items-center bg-white border-2 border-green-700 px-3 py-1.5 text-green-700 text-sm rounded-md hover:bg-green-700 transition-colors hover:text-white"
             onClick={() => setIsManualModalOpen(true)}
           >
             <FaPlusCircle className="mr-1 h-4 w-4" />
@@ -223,14 +236,14 @@ function SchedulesPage() {
         </div>
       </div>
       <div className="bg-white p-4 rounded-lg shadow-md">
-        <div className="flex flex-wrap items-center gap-3 mb-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
           <div className="flex flex-wrap gap-3 text-xs">
             {/* Instructor Dropdown */}
             <div className="relative w-36 min-w-[9rem]">
               <select
                 value={selectedInstructor}
                 onChange={(e) => setSelectedInstructor(e.target.value)}
-                className="appearance-none border-2 border-[#2D336B] rounded-md px-2 py-1 pr-8 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] text-xs"
+                className="appearance-none border-1 border-[#2D336B] rounded-md px-2 py-1 pr-8 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] text-xs"
               >
                 <option value="">All Instructors</option>
                 {[...new Set(data.map((item) => item.instructor))].sort().map((instructor) => (
@@ -259,7 +272,7 @@ function SchedulesPage() {
               <select
                 value={selectedDays}
                 onChange={(e) => setSelectedDays(e.target.value)}
-                className="appearance-none border-2 border-[#2D336B] rounded-md px-2 py-1 pr-8 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] text-xs"
+                className="appearance-none border-1 border-[#2D336B] rounded-md px-2 py-1 pr-8 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] text-xs"
               >
                 <option value="">All Days</option>
                 <option value="MWF">MWF</option>
@@ -287,7 +300,7 @@ function SchedulesPage() {
                 placeholder="Search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="border-2 border-[#2D336B] rounded-md pl-8 pr-2 py-1 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] text-xs"
+                className="border-1 border-[#2D336B] rounded-md pl-8 pr-2 py-1 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] text-xs"
               />
               <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none">
                 <FaSearch className="text-gray-500 w-3 h-3" />
@@ -304,6 +317,7 @@ function SchedulesPage() {
           highlightOnHover
           pointerOnHover
           responsive
+          sortIcon={<span></span>}
         />
       </div>
 
