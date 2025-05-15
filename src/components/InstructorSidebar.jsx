@@ -7,7 +7,7 @@ import {
   FaBook,
   FaSignOutAlt,
 } from "react-icons/fa";
-
+import { MdDashboard } from "react-icons/md";
 function InstructorSidebar({ isCollapsed }) {
   const navigate = useNavigate();
 
@@ -28,6 +28,13 @@ function InstructorSidebar({ isCollapsed }) {
       className={`bg-[#ffffff] h-screen fixed flex flex-col justify-between shadow-md transition-all duration-300 ease-in-out z-10 ${
         isCollapsed ? "w-16" : "w-48"
       }`}
+      style={{
+        // Ensure sidebar stays on top of other content
+        position: "fixed",
+        height: "100vh",
+        left: 0,
+        top: 0,
+      }}
     >
       <div className="h-14 bg-[#2D336B] flex items-center p-3">
         <div className="flex items-center">
@@ -48,6 +55,16 @@ function InstructorSidebar({ isCollapsed }) {
       <div className="flex-1 px-3">
         <nav className="space-y-1 text-sm">
           <NavLink
+            to="/dashboard"
+            className={linkStyles}
+            title={isCollapsed ? "Dashboard" : ""}
+          >
+            <div className="w-5 flex justify-center">
+              <MdDashboard className="w-4 h-4 text-[#34495E]" />
+            </div>
+            {!isCollapsed && <span className="ml-2">Dashboard</span>}
+          </NavLink>
+          <NavLink
             to="/students"
             className={linkStyles}
             title={isCollapsed ? "Students" : ""}
@@ -56,16 +73,6 @@ function InstructorSidebar({ isCollapsed }) {
               <FaUser className="w-4 h-4 text-[#34495E]" />
             </div>
             {!isCollapsed && <span className="ml-2">Students</span>}
-          </NavLink>
-          <NavLink
-            to="/sessions"
-            className={linkStyles}
-            title={isCollapsed ? "Sessions" : ""}
-          >
-            <div className="w-5 flex justify-center">
-              <FaCalendar className="w-4 h-4 text-[#34495E]" />
-            </div>
-            {!isCollapsed && <span className="ml-2">Sessions</span>}
           </NavLink>
           <NavLink
             to="/schedule"
