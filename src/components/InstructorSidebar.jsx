@@ -111,19 +111,6 @@ function InstructorSidebar({ isCollapsed }) {
           </NavLink>
         </nav>
       </div>
-
-      <div className="px-3 pb-3">
-        <button
-          onClick={handleLogout}
-          className={`flex items-center text-gray-800 py-1.5 px-2 rounded transition-colors hover:bg-[#AED6F1] w-full text-sm`}
-          title={isCollapsed ? "Logout" : ""}
-        >
-          <div className="w-5 flex justify-center">
-            <FaSignOutAlt className="w-4 h-4 text-[#34495E]" />
-          </div>
-          {!isCollapsed && <span className="ml-2">Logout</span>}
-        </button>
-      </div>
     </aside>
   );
 }
