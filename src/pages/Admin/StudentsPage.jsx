@@ -12,8 +12,13 @@ import ManualRegistrationModal from "../../components/modal/ManualRegistrationMo
 import EditStudentModal from "../../components/modal/EditStudentModal";
 
 function StudentsPage() {
+  const userRole = localStorage.getItem("userRole") || "guest";
+
+
   // Sample data with course field, unique IDs
   const initialData = [
+
+
     {
       id: 1,
       studentId: "C-2000-001",
@@ -255,10 +260,11 @@ function StudentsPage() {
 
   return (
     <div className="space-y-3">
-      <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
+      <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between border-t-2 border-green-500">
         <div className="flex items-center">
           <h1 className="text-xl text-[#2D336B] font-bold">Students</h1>
         </div>
+        {userRole !== "instructor" && (
         <div className="flex items-center space-x-3 text-[#ffffff]">
           <button
             className="flex items-center bg-white border-2 border-blue-700 px-3 py-1.5 text-blue-700 text-sm rounded-md hover:bg-blue-700 not-[]:transition-colors hover:text-white"
@@ -275,6 +281,7 @@ function StudentsPage() {
             Manual Registration
           </button>
         </div>
+        )}
       </div>
       <div className="bg-white p-4 rounded-lg shadow-md">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-3">

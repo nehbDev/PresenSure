@@ -8,6 +8,8 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
+import logo from "../assets/images/log0.webp";
+
 function InstructorSidebar({ isCollapsed }) {
   const navigate = useNavigate();
 
@@ -29,7 +31,6 @@ function InstructorSidebar({ isCollapsed }) {
         isCollapsed ? "w-16" : "w-48"
       }`}
       style={{
-        // Ensure sidebar stays on top of other content
         position: "fixed",
         height: "100vh",
         left: 0,
@@ -38,8 +39,12 @@ function InstructorSidebar({ isCollapsed }) {
     >
       <div className="h-14 bg-[#2D336B] flex items-center p-3">
         <div className="flex items-center">
-          <div className="bg-white text-[#34495E] rounded-full w-8 h-8 flex items-center justify-center mr-2">
-            <span className="text-base font-bold">PS</span>
+          <div className="bg-white text-[#34495E] rounded-full w-10 h-10 flex items-center justify-center mr-2">
+            <img
+              src={logo}
+              alt="PresenSure Logo"
+              className="h-10 w-10"
+            />
           </div>
           {!isCollapsed && (
             <div>
@@ -77,7 +82,7 @@ function InstructorSidebar({ isCollapsed }) {
           <NavLink
             to="/schedule"
             className={linkStyles}
-            title={isCollapsed ? "Subjects" : ""}
+            title={isCollapsed ? "Schedule" : ""}
           >
             <div className="w-5 flex justify-center">
               <FaBook className="w-4 h-4 text-[#34495E]" />
@@ -105,6 +110,19 @@ function InstructorSidebar({ isCollapsed }) {
             {!isCollapsed && <span className="ml-2">Student Appeals</span>}
           </NavLink>
         </nav>
+      </div>
+
+      <div className="px-3 pb-3">
+        <button
+          onClick={handleLogout}
+          className={`flex items-center text-gray-800 py-1.5 px-2 rounded transition-colors hover:bg-[#AED6F1] w-full text-sm`}
+          title={isCollapsed ? "Logout" : ""}
+        >
+          <div className="w-5 flex justify-center">
+            <FaSignOutAlt className="w-4 h-4 text-[#34495E]" />
+          </div>
+          {!isCollapsed && <span className="ml-2">Logout</span>}
+        </button>
       </div>
     </aside>
   );

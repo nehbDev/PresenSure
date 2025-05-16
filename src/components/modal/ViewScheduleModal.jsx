@@ -84,10 +84,22 @@ const ViewScheduleModal = ({
   onEdit,
   onRemove,
   onScheduleMakeup,
+  userRole,
 }) => {
   const [animate, setAnimate] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [localUserRole, setLocalUserRole] = useState(
+    localStorage.getItem("userRole")?.toLowerCase() || "guest"
+  );
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setLocalUserRole(localStorage.getItem("userRole")?.toLowerCase() || "guest");
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -136,16 +148,15 @@ const ViewScheduleModal = ({
     },
   ];
 
-  const enrolledStudents = studentsData.filter((student) =>
-    schedule.students?.includes(student.studentId)
-  );
+  const enrolledStudents = Array.isArray(schedule.students)
+    ? studentsData.filter((student) => schedule.students.includes(student.studentId))
+    : [];
 
   const handleScheduleMakeup = () => {
     console.log("Closing ViewScheduleModal");
-    onClose(() => {
-      console.log("ViewScheduleModal closed, opening MakeupScheduleModal");
-      onScheduleMakeup(true);
-    });
+    onClose();
+    console.log("ViewScheduleModal closed, opening MakeupScheduleModal");
+    onScheduleMakeup(true);
   };
 
   return (
@@ -225,20 +236,28 @@ const ViewScheduleModal = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {enrolledStudents.map((student, index) => (
-                    <tr
-                      key={student.id}
-                      className={`${
-                        index % 2 === 0 ? "bg-white" : "bg-gray-100"
-                      } text-[#2D336B]`}
-                    >
-                      <td className="p-2 text-center">{student.studentId}</td>
-                      <td className="p-2 text-center">{student.name}</td>
-                      <td className="p-2 text-center">{student.course}</td>
-                      <td className="p-2 text-center">{student.year_and_section}</td>
-                      <td className="p-2 text-center">{student.department}</td>
+                  {enrolledStudents.length > 0 ? (
+                    enrolledStudents.map((student, index) => (
+                      <tr
+                        key={student.id}
+                        className={`${
+                          index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                        } text-[#2D336B]`}
+                      >
+                        <td className="p-2 text-center">{student.studentId}</td>
+                        <td className="p-2 text-center">{student.name}</td>
+                        <td className="p-2 text-center">{student.course}</td>
+                        <td className="p-2 text-center">{student.year_and_section}</td>
+                        <td className="p-2 text-center">{student.department}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="p-2 text-center text-gray-700">
+                        No enrolled students found.
+                      </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
@@ -246,27 +265,33 @@ const ViewScheduleModal = ({
         </div>
 
         <div className="flex justify-center gap-3 p-5 border-t border-gray-200 w-full">
-          <button
-            onClick={onEdit}
-            className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-200 rounded-md hover:bg-green-700 border-2 border-green-700 hover:text-green-100 transition-colors whitespace-nowrap"
-          >
-            <FaEdit className="mr-1 h-3 w-3 inline" />
-            Edit Schedule
-          </button>
-          <button
-            onClick={() => setIsDeleteModalOpen(true)}
-            className="px-2 py-1 text-xs font-semibold text-red-700 bg-red-200 rounded-md hover:bg-red-700 border-2 border-red-700 hover:text-red-100 transition-colors whitespace-nowrap"
-          >
-            <FaTrash className="mr-1 h-3 w-3 inline" />
-            Remove Schedule
-          </button>
-          <button
-            onClick={handleScheduleMakeup}
-            className="px-2 py-1 text-xs font-semibold text-purple-700 bg-purple-200 rounded-md hover:bg-purple-700 border-2 border-purple-700 hover:text-purple-100 transition-colors whitespace-nowrap"
-          >
-            <FaCalendarPlus className="mr-1 h-3 w-3 inline" />
-            Schedule Makeup Class
-          </button>
+          {localUserRole === "admin" && (
+            <>
+              <button
+                onClick={onEdit}
+                className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-200 rounded-md hover:bg-green-700 border-2 border-green-700 hover:text-green-100 transition-colors whitespace-nowrap"
+              >
+                <FaEdit className="mr-1 h-3 w-3 inline" />
+                Edit Schedule
+              </button>
+              <button
+                onClick={() => setIsDeleteModalOpen(true)}
+                className="px-2 py-1 text-xs font-semibold text-red-700 bg-red-200 rounded-md hover:bg-red-700 border-2 border-red-700 hover:text-red-100 transition-colors whitespace-nowrap"
+              >
+                <FaTrash className="mr-1 h-3 w-3 inline" />
+                Remove Schedule
+              </button>
+            </>
+          )}
+          {localUserRole === "instructor" && (
+            <button
+              onClick={handleScheduleMakeup}
+              className="px-2 py-1 text-xs font-semibold text-purple-700 bg-purple-200 rounded-md hover:bg-purple-700 border-2 border-purple-700 hover:text-purple-100 transition-colors whitespace-nowrap"
+            >
+              <FaCalendarPlus className="mr-1 h-3 w-3 inline" />
+              Schedule Makeup Class
+            </button>
+          )}
         </div>
 
         <DeleteScheduleModal
