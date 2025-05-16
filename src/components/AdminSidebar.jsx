@@ -8,6 +8,7 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
+import logo from "../assets/images/log0.webp";
 
 function AdminSidebar({ isCollapsed }) {
   const navigate = useNavigate();
@@ -31,16 +32,20 @@ function AdminSidebar({ isCollapsed }) {
       }`}
       style={{
         // Ensure sidebar stays on top of other content
-        position: 'fixed',
-        height: '100vh',
+        position: "fixed",
+        height: "100vh",
         left: 0,
         top: 0,
       }}
     >
       <div className="h-14 bg-[#2D336B] flex items-center p-3">
         <div className="flex items-center">
-          <div className="bg-white text-[#34495E] rounded-full w-8 h-8 flex items-center justify-center mr-2">
-            <span className="text-base font-bold">PS</span>
+          <div className="bg-white text-[#34495E] rounded-full w-10 h-10 flex items-center justify-center mr-2">
+            <img
+              src={logo}
+              alt="PresenSure Logo"
+              className="h-10 w-10" // Adjust size as needed
+            />{" "}
           </div>
           {!isCollapsed && (
             <div>

@@ -24,7 +24,7 @@ function Layout() {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-[#F2F9FF]">
+    <div className="flex min-h-screen bg-gradient-to-b from-[#F2F9FF] to-[#c7ccfd]">
       {userRole === "instructor" ? (
         <InstructorSidebar isCollapsed={isSidebarCollapsed} />
       ) : (

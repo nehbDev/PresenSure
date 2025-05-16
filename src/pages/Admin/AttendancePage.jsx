@@ -197,7 +197,7 @@ function AttendancePage() {
 
   return (
     <div className="space-y-3 w-full max-w-[1800px] mx-auto">
-      <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
+      <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between border-t-2  border-purple-500">
         <div className="flex items-center">
           <h1 className="text-xl text-[#2D336B] font-bold">
             Attendance Record

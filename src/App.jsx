@@ -7,7 +7,7 @@ import InstructorPage from "./pages/Admin/InstructorPage";
 import SchedulePage from "./pages/Admin/SchedulePage";
 import AttendancePage from "./pages/Admin/AttendancePage";
 import AppealsPage from "./pages/Admin/AppealsPage";
-import SessionsPage from "./pages/Instructor/SessionsPage";
+import DashboardPage from "./pages/Instructor/DashboardPage";
 import Layout from "./components/Layout";
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
           <Route path="/instructors" element={<InstructorPage />} />
           <Route path="/attendance" element={<AttendancePage />} />
           <Route path="/appeals" element={<AppealsPage />} />
-          <Route path="/sessions" element={<SessionsPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
         </Route>
       </Routes>
     </Router>

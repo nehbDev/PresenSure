@@ -5,7 +5,18 @@ const ViewStudentModal = ({ isOpen, onClose, student, onEdit, onRemove }) => {
   const [animate, setAnimate] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userRole, setUserRole] = useState(localStorage.getItem("userRole")?.toLowerCase() || "guest");
 
+  // Update userRole when localStorage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUserRole(localStorage.getItem("userRole")?.toLowerCase() || "guest");
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
+  // Handle modal animation
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
@@ -96,7 +107,7 @@ const ViewStudentModal = ({ isOpen, onClose, student, onEdit, onRemove }) => {
         >
           {/* Header */}
           <div className="bg-[#A9B5DF] flex justify-between items-center px-5 py-3 border-b rounded-t-lg border-gray-200">
-            <h2 className="text-base font-bold text-[#2D336B">
+            <h2 className="text-base font-bold text-[#2D336B]">
               Student Details
             </h2>
             <button
@@ -196,20 +207,24 @@ const ViewStudentModal = ({ isOpen, onClose, student, onEdit, onRemove }) => {
 
           {/* Footer Buttons */}
           <div className="flex justify-center gap-3 p-5 border-t border-gray-200 w-full">
-            <button
-              onClick={onEdit}
-              className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-200 rounded-md hover:bg-green-700 border-2 border-green-700 hover:text-green-100 transition-colors whitespace-nowrap"
-            >
-              <FaEdit className="mr-1 h-3 w-3 inline" />
-              Edit Student
-            </button>
-            <button
-              onClick={() => setShowDeleteModal(true)}
-              className="px-2 py-1 text-xs font-semibold text-red-700 bg-red-200 rounded-md hover:bg-red-700 border-2 border-red-700 hover:text-red-100 transition-colors whitespace-nowrap"
-            >
-              <FaTrash className="mr-1 h-3 w-3 inline" />
-              Remove Student
-            </button>
+            {userRole === "admin" && (
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={onEdit}
+                  className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-200 rounded-md hover:bg-green-700 border-2 border-green-700 hover:text-green-100 transition-colors whitespace-nowrap"
+                >
+                  <FaEdit className="mr-1 h-3 w-3 inline" />
+                  Edit Student
+                </button>
+                <button
+                  onClick={() => setShowDeleteModal(true)}
+                  className="px-2 py-1 text-xs font-semibold text-red-700 bg-red-200 rounded-md hover:bg-red-700 border-2 border-red-700 hover:text-red-100 transition-colors whitespace-nowrap"
+                >
+                  <FaTrash className="mr-1 h-3 w-3 inline" />
+                  Remove Student
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

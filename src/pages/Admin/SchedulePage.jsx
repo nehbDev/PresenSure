@@ -6,14 +6,29 @@ import {
   FaUserPlus,
   FaAngleRight,
   FaPlusCircle,
-  FaCalendarPlus
+  FaCalendarPlus,
 } from "react-icons/fa";
 import ViewScheduleModal from "../../components/modal/ViewScheduleModal";
 import BulkScheduleModal from "../../components/modal/BulkScheduleModal";
 import ManualScheduleModal from "../../components/modal/ManualScheduleModal";
 import EditScheduleModal from "../../components/modal/EditScheduleModal";
+import MakeupScheduleModal from "../../components/modal/MakeupScheduleModal";
 
 function SchedulesPage() {
+  // Get user role from localStorage
+  const userRole = localStorage.getItem("userRole") || "guest";
+
+  // Simulate user data mapping (in a real app, fetch from backend)
+  const userData = {
+    "admin@example.com": { name: "Admin User", role: "admin" },
+    "instructor@example.com": { name: "Dr. John Reyes", role: "instructor" },
+  };
+
+  // Get current user email (simulate; in real app, store email in localStorage)
+  const userEmail =
+    userRole === "instructor" ? "instructor@example.com" : "admin@example.com";
+  const user = userData[userEmail] || { name: "Unknown", role: "guest" };
+
   // Sample schedule data
   const initialData = [
     {
@@ -26,6 +41,7 @@ function SchedulesPage() {
       room: "LAB-101",
       instructor: "Prof. Anna Smith",
       totalStudents: 30,
+      students: ["C-2000-001", "C-2000-002"],
     },
     {
       id: 2,
@@ -37,6 +53,7 @@ function SchedulesPage() {
       room: "LAB-101",
       instructor: "Dr. John Reyes",
       totalStudents: 25,
+      students: ["C-2000-003"],
     },
     {
       id: 3,
@@ -48,6 +65,7 @@ function SchedulesPage() {
       room: "RM-305",
       instructor: "Prof. Maria Cruz",
       totalStudents: 28,
+      students: ["C-2000-001", "C-2000-002", "C-2000-003"],
     },
   ];
 
@@ -60,6 +78,7 @@ function SchedulesPage() {
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isMakeupModalOpen, setIsMakeupModalOpen] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
 
   // Handle Edit Schedule
@@ -74,11 +93,39 @@ function SchedulesPage() {
 
   // Handle Remove Schedule
   const handleRemoveSchedule = (scheduleId) => {
-    setData((prevData) => prevData.filter((schedule) => schedule.id !== scheduleId));
+    setData((prevData) =>
+      prevData.filter((schedule) => schedule.id !== scheduleId)
+    );
   };
 
+  // Determine current day for filtering today's schedule and display
+  const getCurrentDay = () => {
+    const today = new Date().getDay();
+    const dayMap = {
+      0: { schedule: "", display: "Sunday" },
+      1: { schedule: "MWF", display: "Monday" },
+      2: { schedule: "TTh", display: "Tuesday" },
+      3: { schedule: "MWF", display: "Wednesday" },
+      4: { schedule: "TTh", display: "Thursday" },
+      5: { schedule: "MWF", display: "Friday" },
+      6: { schedule: "", display: "Saturday" },
+    };
+    return dayMap[today] || { schedule: "", display: "Unknown" };
+  };
+
+  // Get schedule pattern and display day
+  const { schedule: currentSchedule, display: currentDayName } = getCurrentDay();
+
+  // Filter data for today's schedule (only for instructors)
+  const todaySchedule =
+    userRole === "instructor"
+      ? data.filter((item) => {
+          return item.days === currentSchedule;
+        })
+      : [];
+
   // Define columns for DataTable
-  const columns = [
+  const allColumns = [
     {
       name: "Subject Code",
       selector: (row) => row.subjectCode || "N/A",
@@ -141,7 +188,20 @@ function SchedulesPage() {
     },
   ];
 
-  // Filter data
+  // Filter columns for Today's Schedule (hide Days and Instructor for instructors)
+  const todayColumns = allColumns.filter((column) => {
+    return column.name !== "Days" && column.name !== "Instructor";
+  });
+
+  // Filter columns for All Schedules (hide Instructor for instructors)
+  const allScheduleColumns = allColumns.filter((column) => {
+    if (userRole === "instructor") {
+      return column.name !== "Instructor";
+    }
+    return true;
+  });
+
+  // Filter data for all schedules
   const filteredData = data.filter((item) => {
     const matchesSearch =
       (item.subjectCode || "").toLowerCase().includes(search.toLowerCase()) ||
@@ -154,7 +214,7 @@ function SchedulesPage() {
     return matchesSearch && matchesDays && matchesInstructor;
   });
 
-  // Custom styles for DataTable (Copied from StudentsPage)
+  // Custom styles for DataTable
   const customStyles = {
     table: {
       style: {
@@ -212,29 +272,65 @@ function SchedulesPage() {
     },
   };
 
+  // Handle closing ViewScheduleModal with callback
+  const handleCloseViewModal = (callback) => {
+    setIsViewModalOpen(false);
+    if (callback && typeof callback === "function") {
+      setTimeout(callback, 0); // Ensure callback runs after state update
+    }
+  };
+
   return (
     <div className="space-y-3 w-full max-w-[1800px] mx-auto">
-      <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
+      <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between border-t-2 border-yellow-500">
         <div className="flex items-center">
           <h1 className="text-xl text-[#2D336B] font-bold">Schedules</h1>
         </div>
-        <div className="flex items-center space-x-3 text-[#ffffff]">
-          <button
-            className="flex items-center bg-white border-2 border-blue-700 px-3 py-1.5 text-blue-700 text-sm rounded-md hover:bg-blue-700 transition-colors hover:text-white"
-            onClick={() => setIsBulkModalOpen(true)}
-          >
-            <FaCalendarPlus className="mr-1 h-4 w-4" />
-            Bulk Schedule
-          </button>
-          <button
-            className="flex items-center bg-white border-2 border-green-700 px-3 py-1.5 text-green-700 text-sm rounded-md hover:bg-green-700 transition-colors hover:text-white"
-            onClick={() => setIsManualModalOpen(true)}
-          >
-            <FaPlusCircle className="mr-1 h-4 w-4" />
-            Add Schedule
-          </button>
-        </div>
+        {userRole !== "instructor" && (
+          <div className="flex items-center space-x-3 text-[#ffffff]">
+            <button
+              className="flex items-center bg-white border-2 border-blue-700 px-3 py-1.5 text-blue-700 text-sm rounded-md hover:bg-blue-700 transition-colors hover:text-white"
+              onClick={() => setIsBulkModalOpen(true)}
+            >
+              <FaCalendarPlus className="mr-1 h-4 w-4" />
+              Bulk Schedule
+            </button>
+            <button
+              className="flex items-center bg-white border-2 border-green-700 px-3 py-1.5 text-green-700 text-sm rounded-md hover:bg-green-700 transition-colors hover:text-white"
+              onClick={() => setIsManualModalOpen(true)}
+            >
+              <FaPlusCircle className="mr-1 h-4 w-4" />
+              Add Schedule
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Today's Schedule Table (Visible only for instructors) */}
+      {userRole === "instructor" && (
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-lg text-[#2D336B] font-bold mb-3">
+            Today's Schedule / {currentDayName}
+          </h2>
+          {todaySchedule.length > 0 ? (
+            <DataTable
+              columns={todayColumns}
+              data={todaySchedule}
+              customStyles={customStyles}
+              highlightOnHover
+              pointerOnHover
+              responsive
+              sortIcon={<span></span>}
+            />
+          ) : (
+            <p className="text-sm text-gray-500 text-center">
+              No schedules for today.
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* All Schedules Table */}
       <div className="bg-white p-4 rounded-lg shadow-md">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
           <div className="flex flex-wrap gap-3 text-xs">
@@ -246,11 +342,13 @@ function SchedulesPage() {
                 className="appearance-none border-1 border-[#2D336B] rounded-md px-2 py-1 pr-8 h-8 w-full focus:outline-none focus:ring-2 focus:ring-[#34495E] text-xs"
               >
                 <option value="">All Instructors</option>
-                {[...new Set(data.map((item) => item.instructor))].sort().map((instructor) => (
-                  <option key={instructor} value={instructor}>
-                    {instructor}
-                  </option>
-                ))}
+                {[...new Set(data.map((item) => item.instructor))]
+                  .sort()
+                  .map((instructor) => (
+                    <option key={instructor} value={instructor}>
+                      {instructor}
+                    </option>
+                  ))}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
                 <svg
@@ -310,7 +408,7 @@ function SchedulesPage() {
         </div>
 
         <DataTable
-          columns={columns}
+          columns={allScheduleColumns}
           data={filteredData}
           customStyles={customStyles}
           pagination
@@ -324,13 +422,15 @@ function SchedulesPage() {
       {/* Render the Modals */}
       <ViewScheduleModal
         isOpen={isViewModalOpen}
-        onClose={() => setIsViewModalOpen(false)}
+        onClose={handleCloseViewModal} // Updated to use the new handler
         schedule={selectedSchedule}
         onEdit={() => {
           setIsViewModalOpen(false);
           setIsEditModalOpen(true);
         }}
         onRemove={handleRemoveSchedule}
+        onScheduleMakeup={() => setIsMakeupModalOpen(true)}
+        userRole={userRole}
       />
       <BulkScheduleModal
         isOpen={isBulkModalOpen}
@@ -345,6 +445,15 @@ function SchedulesPage() {
         onClose={() => setIsEditModalOpen(false)}
         schedule={selectedSchedule}
         onSave={handleEditSchedule}
+      />
+      <MakeupScheduleModal
+        isOpen={isMakeupModalOpen}
+        onClose={() => setIsMakeupModalOpen(false)}
+        onScheduleMakeup={(makeupData) => {
+          console.log("Makeup scheduled:", makeupData);
+          setIsMakeupModalOpen(false);
+        }}
+        schedule={selectedSchedule}
       />
     </div>
   );
