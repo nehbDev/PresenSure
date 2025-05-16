@@ -31,7 +31,6 @@ function InstructorSidebar({ isCollapsed }) {
         isCollapsed ? "w-16" : "w-48"
       }`}
       style={{
-        // Ensure sidebar stays on top of other content
         position: "fixed",
         height: "100vh",
         left: 0,
@@ -44,8 +43,8 @@ function InstructorSidebar({ isCollapsed }) {
             <img
               src={logo}
               alt="PresenSure Logo"
-              className="h-10 w-10" // Adjust size as needed
-            />{" "}
+              className="h-10 w-10"
+            />
           </div>
           {!isCollapsed && (
             <div>
@@ -83,7 +82,7 @@ function InstructorSidebar({ isCollapsed }) {
           <NavLink
             to="/schedule"
             className={linkStyles}
-            title={isCollapsed ? "Subjects" : ""}
+            title={isCollapsed ? "Schedule" : ""}
           >
             <div className="w-5 flex justify-center">
               <FaBook className="w-4 h-4 text-[#34495E]" />
@@ -111,6 +110,19 @@ function InstructorSidebar({ isCollapsed }) {
             {!isCollapsed && <span className="ml-2">Student Appeals</span>}
           </NavLink>
         </nav>
+      </div>
+
+      <div className="px-3 pb-3">
+        <button
+          onClick={handleLogout}
+          className={`flex items-center text-gray-800 py-1.5 px-2 rounded transition-colors hover:bg-[#AED6F1] w-full text-sm`}
+          title={isCollapsed ? "Logout" : ""}
+        >
+          <div className="w-5 flex justify-center">
+            <FaSignOutAlt className="w-4 h-4 text-[#34495E]" />
+          </div>
+          {!isCollapsed && <span className="ml-2">Logout</span>}
+        </button>
       </div>
     </aside>
   );

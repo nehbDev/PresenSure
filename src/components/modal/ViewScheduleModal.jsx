@@ -1,6 +1,5 @@
 import { FaTimes, FaEdit, FaTrash, FaCalendarPlus } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import DataTable from "react-data-table-component";
 
 const DeleteScheduleModal = ({ isOpen, onClose, onConfirm, schedule }) => {
   const [animate, setAnimate] = useState(false);
@@ -90,6 +89,17 @@ const ViewScheduleModal = ({
   const [animate, setAnimate] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [localUserRole, setLocalUserRole] = useState(
+    localStorage.getItem("userRole")?.toLowerCase() || "guest"
+  );
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setLocalUserRole(localStorage.getItem("userRole")?.toLowerCase() || "guest");
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -138,16 +148,15 @@ const ViewScheduleModal = ({
     },
   ];
 
-  const enrolledStudents = studentsData.filter((student) =>
-    schedule.students?.includes(student.studentId)
-  );
+  const enrolledStudents = Array.isArray(schedule.students)
+    ? studentsData.filter((student) => schedule.students.includes(student.studentId))
+    : [];
 
   const handleScheduleMakeup = () => {
     console.log("Closing ViewScheduleModal");
-    onClose(() => {
-      console.log("ViewScheduleModal closed, opening MakeupScheduleModal");
-      onScheduleMakeup(true); // Directly set isMakeupModalOpen to true
-    });
+    onClose();
+    console.log("ViewScheduleModal closed, opening MakeupScheduleModal");
+    onScheduleMakeup(true);
   };
 
   return (
@@ -162,7 +171,7 @@ const ViewScheduleModal = ({
         }`}
       >
         <div className="bg-[#A9B5DF] flex justify-between items-center px-5 py-3 border-b rounded-t-lg border-gray-200">
-          <h2 className="text-base font-bold text-[#2D336B">
+          <h2 className="text-base font-bold text-[#2D336B]">
             Schedule Details
           </h2>
           <button
@@ -227,20 +236,28 @@ const ViewScheduleModal = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {enrolledStudents.map((student, index) => (
-                    <tr
-                      key={student.id}
-                      className={`${
-                        index % 2 === 0 ? "bg-white" : "bg-gray-100"
-                      } text-[#2D336B]`}
-                    >
-                      <td className="p-2 text-center">{student.studentId}</td>
-                      <td className="p-2 text-center">{student.name}</td>
-                      <td className="p-2 text-center">{student.course}</td>
-                      <td className="p-2 text-center">{student.year_and_section}</td>
-                      <td className="p-2 text-center">{student.department}</td>
+                  {enrolledStudents.length > 0 ? (
+                    enrolledStudents.map((student, index) => (
+                      <tr
+                        key={student.id}
+                        className={`${
+                          index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                        } text-[#2D336B]`}
+                      >
+                        <td className="p-2 text-center">{student.studentId}</td>
+                        <td className="p-2 text-center">{student.name}</td>
+                        <td className="p-2 text-center">{student.course}</td>
+                        <td className="p-2 text-center">{student.year_and_section}</td>
+                        <td className="p-2 text-center">{student.department}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="p-2 text-center text-gray-700">
+                        No enrolled students found.
+                      </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
@@ -248,7 +265,7 @@ const ViewScheduleModal = ({
         </div>
 
         <div className="flex justify-center gap-3 p-5 border-t border-gray-200 w-full">
-          {userRole !== "instructor" && (
+          {localUserRole === "admin" && (
             <>
               <button
                 onClick={onEdit}
@@ -266,7 +283,7 @@ const ViewScheduleModal = ({
               </button>
             </>
           )}
-          {userRole === "instructor" && (
+          {localUserRole === "instructor" && (
             <button
               onClick={handleScheduleMakeup}
               className="px-2 py-1 text-xs font-semibold text-purple-700 bg-purple-200 rounded-md hover:bg-purple-700 border-2 border-purple-700 hover:text-purple-100 transition-colors whitespace-nowrap"
