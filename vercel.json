@@ -7,4 +7,6 @@
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ]
+
+  
 }
